@@ -2,83 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
+use App\Models\Notation;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function liste()
     {
-        //
+        // Recupererer la liste des clients :
+        $clients = Client::all();
+        // afficher une vue qui contient la liste des clients :
+        return view("clients/liste", ["clients" =>  $clients]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function ajouter()
     {
-        //
+        // afficher une vue qui contient un formulaire :
+        return view("clients/ajouter");
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function details($id)
     {
-        //
+        // Recuperer un client par id:
+        $client = Client::find($id);
+        // afficher une vue qui les information d'un client et un formulaire :
+        return view("clients/details", ["client" => $client]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+
+    public function insert(Request $request)
     {
-        //
+        // creer un client :
+        Client::create($request->all());
+        // afficher la vue qui contient la liste des clients :
+        return redirect("clients");
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        // Recuperer un client par id:
+        $client =  Client::find($id);
+        // Modifier les donnees de client :
+        $client->nom = $request->nom;
+        $client->prenom = $request->prenom;
+        $client->save();
+        // afficher la vue qui contient la liste des clients :
+        return redirect("clients");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function delete($id)
     {
-        //
+        // Recuperer un client par id:
+        $client = Client::find($id);
+        // supprimer le client :
+        $client->delete();
+        // afficher la vue qui contient la liste des clients :
+        return redirect("clients");
     }
 }

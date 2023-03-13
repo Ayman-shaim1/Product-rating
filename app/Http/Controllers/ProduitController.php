@@ -2,83 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Produit;
 use Illuminate\Http\Request;
 
 class ProduitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function liste()
     {
-        //
+        // Recupererer la liste des produits :
+        $produits = Produit::all();
+        // afficher une vue qui contient la liste des produits :
+        return view("produits/liste", ["produits" =>  $produits]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function ajouter()
     {
-        //
+        // afficher une vue qui contient un formulaire :
+        return view("produits/ajouter");
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function details($id)
     {
-        //
+        // Recuperer un produit par id:
+        $produit = Produit::find($id);
+        // afficher une vue qui les information d'un produit et un formulaire :
+        return view("produits/details", ["produit" => $produit]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+
+    public function insert(Request $request)
     {
-        //
+        // creer un produit :
+        Produit::create($request->all());
+        // afficher la vue qui contient la liste des produits :
+        return redirect("produits");
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        // Recuperer un produit par id:
+        $produit = Produit::find($id);
+
+        // Modifier les donnees de produit :
+        $produit->libelle = $request->libelle;
+        $produit->prix = $request->prix;
+        $produit->save();
+        // afficher la vue qui contient la liste des produits :
+        return redirect("produits");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function delete($id)
     {
-        //
+        // Recuperer un produit par id:
+        $produit = Produit::find($id);
+        // supprimer le produit :
+        $produit->delete();
+        // afficher la vue qui contient la liste des produits :
+        return redirect("produits");
     }
 }
