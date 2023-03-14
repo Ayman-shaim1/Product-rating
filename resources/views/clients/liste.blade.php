@@ -29,7 +29,7 @@
                                     <a href="/clients/{{ $client->id }}" class="btn btn-sm btn-warning">
                                         modifier
                                     </a>
-                                    <a href="/clients/rating/{{ $client->id }}" class="btn btn-sm btn-success">
+                                    <a href="/notations/{{ $client->id }}" class="btn btn-sm btn-success">
                                         rating
                                     </a>
                                     <a href="/clients/supprimer/{{ $client->id }}" class="btn btn-sm btn-danger">

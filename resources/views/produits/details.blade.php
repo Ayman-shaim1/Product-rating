@@ -8,20 +8,20 @@
 
     <div class="card mt-3">
         <div class="card-body">
-            <form method="POST" action="/produits/modifier/{{ $produit->id }}">
+            <form method="POST" action="/produits/modifier/{{ $produit ? $produit->id : null }}">
                 @csrf
                 <div class="form-group mt-1">
                     <label for="txt-libelle">Id :</label>
-                    <input value="{{ $produit->id }}" type="text" class="form-control" disabled />
+                    <input value="{{ $produit ? $produit->id : null  }}" type="text" class="form-control" disabled />
                 </div>
                 <div class="form-group mt-1">
                     <label for="txt-libelle">Libelle :</label>
-                    <input value="{{ $produit->libelle }}" type="text" class="form-control" name="libelle"
+                    <input value="{{ $produit ? $produit->libelle : null }}" type="text" class="form-control" name="libelle"
                         placeholder="veuillez saisire la libelle de produit ..." />
                 </div>
                 <div class="form-group mt-1">
                     <label for="txt-prix">Prix :</label>
-                    <input value="{{ $produit->prix }}" type="number" class="form-control" name="prix"
+                    <input value="{{  $produit ? $produit->prix : null}}" type="number" class="form-control" name="prix"
                         placeholder="veuillez saisire le prix de produit ..." />
                 </div>
 
