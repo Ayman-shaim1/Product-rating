@@ -10,7 +10,7 @@
     @foreach ($errors as $error)
         <div class="alert alert-danger">
             <span class="d-flex align-items-center">
-                <i class="fas fa-times d-block"></i> &nbsp; <span class="d-block">{{ $error }}</span>
+                <i class="fa-solid fa-circle-exclamation"></i> &nbsp; <span class="d-block">{{ $error }}</span>
             </span>
         </div>
     @endforeach
@@ -25,11 +25,14 @@
                     <table class="table table-sm">
                         <tr>
                             <td><label>Le plus note :</label></td>
-                            <td><label class="text-success">{{ $produitPlusNote[0]->libelle }}</label></td>
+                            <td><label class="text-success">{{ $produitPlusNote ? $produitPlusNote->produit->libelle : '' }}
+                                </label></td>
                         </tr>
                         <tr>
                             <td><label>Le moins note :</label></td>
-                            <td><label class="text-danger">{{ $produitMoinsNote[0]->libelle }}</label></td>
+                            <td><label
+                                    class="text-danger">{{ $produitMoinsNote ? $produitMoinsNote->produit->libelle : '' }}</label>
+                            </td>
                         </tr>
                     </table>
 

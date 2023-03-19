@@ -21,22 +21,12 @@ class NotationController extends Controller
         $produits = Produit::all();
 
 
-        /*
-            ----------------------------------------------------------
-                    SELECT libelle, sum(note) as 'note'
-                    FROM notations n inner join produits p ON
-                    n.produit_id = p.id
-                    GROUP BY libelle
-                    ORDER BY note DESC
 
-            ----------------------------------------------------------
-        */
 
-        //  Recuperer le produits le plus notee:
-        $produits = Notation::join('produits', 'notations.produit_id', '=', 'produits.id')
-            ->select('libelle', DB::raw('SUM(note) AS note'))
-            ->groupBy('libelle')
-            ->orderBy('note', "desc")
+
+        $produits = Notation::with("produit")->groupBy('produit_id')
+            ->selectRaw('produit_id, avg(note) as note')
+            ->orderByDesc('note')
             ->get();
 
         return view("welcome", [
@@ -62,6 +52,7 @@ class NotationController extends Controller
                     SELECT libelle, sum(note) as 'note'
                     FROM notations n inner join produits p ON
                     n.produit_id = p.id
+                    WHERE idClient = $id
                     GROUP BY libelle
                     ORDER BY note DESC
                     LIMIT 1
@@ -69,22 +60,12 @@ class NotationController extends Controller
         */
 
         //  Recuperer le produits le plus notee:
-        $produitPlusNote = Notation::join('produits', 'notations.produit_id', '=', 'produits.id')
-            ->select('libelle', DB::raw('SUM(note) AS note'))
-            ->groupBy('libelle')
-            ->orderBy('note', "desc")
-            ->limit(1)
-            ->get();
-
-
+        $produitPlusNote = Notation::with("produit")->where("client_id", $id)->orderByDesc('note')
+            ->first();
 
         //  Recuperer le produits le moins notee:
-        $produitMoinsNote = Notation::join('produits', 'notations.produit_id', '=', 'produits.id')
-            ->select('libelle', DB::raw('SUM(note) AS note'))
-            ->groupBy('libelle')
-            ->orderBy('note', "asc")
-            ->limit(1)
-            ->get();
+        $produitMoinsNote = Notation::with("produit")->where("client_id", $id)->orderBy('note')
+            ->first();
 
         // afficher la vue qui contient la liste des notations et le formulaire d'ajoute  :
         return view("notation/liste", [
@@ -97,7 +78,7 @@ class NotationController extends Controller
 
     public function insert(Request $request, $id)
     {
-        $errors = [];
+
         // Recuperer une notation par id client et par id produit pour voire :
         // est ce que le client a deja note pour ce produit ou non :
         $notation =  Notation::where('produit_id', $request->produit)
@@ -105,18 +86,15 @@ class NotationController extends Controller
             ->first();
 
         if ($notation) {
-            $errors[] = "vous avez deja notee ce produit !";
-            // afficher la vue qui contient la liste des notations et le formulaire d'ajoute  :
-            return redirect("notations/" . $id)->with("errors", $errors);
+            $notation->note =  $request->note;
+            $notation->save();
         } else {
             // creer une ligne dans la table notation :
-            $notation = new Notation();
-            $notation->produit_id =  $request->produit;
-            $notation->note =  $request->note;
-            $notation->client_id =  $id;
-            $notation->save();
-            // afficher la vue qui contient la liste des notations et le formulaire d'ajoute  :
-            return redirect("notations/" . $id);
+            $notationToAdd = new Notation();
+            $notationToAdd->produit_id =  $request->produit;
+            $notationToAdd->note =  $request->note;
+            $notationToAdd->client_id =  $id;
+            $notationToAdd->save();
         }
         // afficher la vue qui contient la liste des notations et le formulaire d'ajoute  :
         return redirect("notations/" . $id);

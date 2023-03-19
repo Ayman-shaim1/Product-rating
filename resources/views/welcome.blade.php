@@ -13,11 +13,14 @@
                     <table class="table table-sm ">
                         <tr>
                             <td><label>Le plus note :</label></td>
-                            <td><label class="text-success">{{ $produits[0]->libelle }}</label></td>
+                            <td><label class="text-success">{{ $produits[0]->produit->libelle }} avec
+                                    {{ round($produits[0]->note) }}</label>
+                            </td>
                         </tr>
                         <tr>
                             <td><label>Le moins note :</label></td>
-                            <td><label class="text-danger">{{ $produits[$produits->count() - 1]->libelle }}</label></td>
+                            <td><label class="text-danger">{{ $produits[$produits->count() - 1]->produit->libelle }} avec
+                                    {{ round($produits[$produits->count() - 1]->note) }}</label></td>
                         </tr>
                     </table>
                 </div>
@@ -34,10 +37,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($produits as $produit)
+                        @foreach ($produits as $item)
                             <tr>
-                                <td>{{ $produit->libelle }}</td>
-                                <td>{{ $produit->note }}</td>
+                                <td>{{ $item->produit->libelle }}</td>
+                                <td>{{ round($item->note) }}</td>
 
                             </tr>
                         @endforeach

@@ -34,8 +34,6 @@ Route::prefix('/clients')->group(function () {
 });
 
 Route::prefix('/notations')->group(function () {
-
-
     Route::get('/{id}', [NotationController::class, "notation"]);
     Route::post('/ajouter/{id}', [NotationController::class, "insert"]);
     Route::get('/supprimer/produit/{idProduit}/client/{idClient}', [NotationController::class, "delete"]);
